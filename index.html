@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Timers App</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #e6e6e6;
+            color: white;
+        }
+
+        #screenTitle {
+            margin: 0 0 10px;
+            font-size: 23px;
+            font-weight: normal;
+            color: #888;
+        }
+
+        .app {
+            min-height: 650px;
+            padding: 25px 15px;
+            background: #1e1e22;
+            text-align: center;
+            border: 4px solid transparent;
+        }
+
+        .app.has-ended {
+            border-color: #0795ff;
+        }
+
+        .app-heading {
+            margin: 0 0 18px;
+            font-size: 14px;
+        }
+
+        .timer-form {
+            width: 100%;
+            max-width: 345px;
+            min-height: 54px;
+            margin: 0 auto 19px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 7px;
+            background: #36354d;
+            border-radius: 9px;
+        }
+
+        .form-label,
+        .timer-label {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        .time-inputs {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .time-inputs input {
+            width: 29px;
+            padding: 2px 0;
+            border: none;
+            border-bottom: 1px solid white;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 19px;
+            text-align: center;
+        }
+
+        .time-inputs input::placeholder {
+            color: white;
+            opacity: 1;
+        }
+
+        .colon {
+            font-size: 19px;
+        }
+
+        button {
+            padding: 7px 13px;
+            border: none;
+            border-radius: 20px;
+            font-size: 9px;
+            cursor: pointer;
+        }
+
+        button:focus-visible,
+        input:focus-visible {
+            outline: 2px solid #0795ff;
+            outline-offset: 3px;
+        }
+
+        .start-btn,
+        .stop-timer-btn {
+            min-width: 50px;
+            background: #f0ff50;
+            color: #222;
+        }
+
+        .section-heading {
+            max-width: 168px;
+            margin: 0 auto 20px;
+            padding: 8px;
+            border-radius: 20px;
+            background: #38383c;
+            font-size: 10px;
+        }
+
+        #timerList {
+            max-width: 345px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 17px;
+        }
+
+        .timer-card {
+            min-height: 54px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: #36354d;
+            border-radius: 9px;
+        }
+
+        .time-display {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 19px;
+            white-space: nowrap;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .empty-message {
+            margin-top: 0;
+            font-size: 10px;
+        }
+
+        .ended-card {
+            min-height: 54px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            gap: 10px;
+            border-radius: 9px;
+            background: #f0ff50;
+            color: #36354d;
+        }
+
+        .ended-card strong {
+            font-size: 18px;
+        }
+
+        .stop-alarm-btn {
+            min-width: 50px;
+            background: #36354d;
+            color: white;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 10px;
+            }
+
+            .app {
+                padding: 25px 8px;
+            }
+
+            .timer-form,
+            .timer-card {
+                padding: 10px 7px;
+                gap: 5px;
+            }
+
+            .time-inputs {
+                gap: 3px;
+            }
+
+            .time-inputs input {
+                width: 24px;
+                font-size: 16px;
+            }
+
+            .time-display {
+                gap: 3px;
+                font-size: 16px;
+            }
+
+            .form-label,
+            .timer-label {
+                font-size: 9px;
+            }
+
+            .ended-card strong {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1 id="screenTitle">Starting Screen</h1>
+    </header>
+
+    <main class="app" id="app">
+
+        <h2 class="app-heading">Multiple Timers App</h2>
+
+        <!-- Timer Input Section -->
+        <form class="timer-form" id="timerForm">
+            <label class="form-label" for="hours">Set Time :</label>
+
+            <div class="time-inputs">
+                <input
+                    id="hours"
+                    type="number"
+                    min="0"
+                    max="99"
+                    placeholder="hh"
+                    aria-label="Hours"
+                >
+
+                <span class="colon">:</span>
+
+                <input
+                    id="minutes"
+                    type="number"
+                    min="0"
+                    max="59"
+                    placeholder="mm"
+                    aria-label="Minutes"
+                >
+
+                <span class="colon">:</span>
+
+                <input
+                    id="seconds"
+                    type="number"
+                    min="0"
+                    max="59"
+                    placeholder="ss"
+                    aria-label="Seconds"
+                >
+            </div>
+
+            <button type="submit" class="start-btn">
+                Set
+            </button>
+        </form>
+
+        <h2 class="section-heading">Current Timers</h2>
+
+        <!-- Active and completed timers -->
+        <section
+            id="timerList"
+            aria-label="Current timers"
+            aria-live="polite"
+        ></section>
+
+        <p class="empty-message" id="emptyMessage">
+            You have no timers currently!
+        </p>
+
+    </main>
+
+    <script>
+        // DOM elements
+        const form = document.getElementById("timerForm");
+        const hoursInput = document.getElementById("hours");
+        const minutesInput = document.getElementById("minutes");
+        const secondsInput = document.getElementById("seconds");
+        const timerList = document.getElementById("timerList");
+        const emptyMessage = document.getElementById("emptyMessage");
+        const screenTitle = document.getElementById("screenTitle");
+        const app = document.getElementById("app");
+
+        // Each timer has its own interval.
+        const timers = new Map();
+        let nextTimerId = 1;
+
+        // Browser audio beep using the Web Audio API.
+        // No external audio file is required.
+        let audioContext = null;
+
+        function playAlarm() {
+            try {
+                const AudioContextClass =
+                    window.AudioContext || window.webkitAudioContext;
+
+                if (!AudioContextClass) return;
+
+                if (!audioContext) {
+                    audioContext = new AudioContextClass();
+                }
+
+                const sound = () => {
+                    const oscillator = audioContext.createOscillator();
+                    const gain = audioContext.createGain();
+
+                    oscillator.type = "sine";
+                    oscillator.frequency.value = 880;
+
+                    gain.gain.setValueAtTime(
+                        0.25,
+                        audioContext.currentTime
+                    );
+
+                    gain.gain.exponentialRampToValueAtTime(
+                        0.001,
+                        audioContext.currentTime + 0.6
+                    );
+
+                    oscillator.connect(gain);
+                    gain.connect(audioContext.destination);
+
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.6);
+                };
+
+                if (audioContext.state === "suspended") {
+                    audioContext.resume().then(sound).catch(() => {});
+                } else {
+                    sound();
+                }
+            } catch (error) {
+                console.warn("Audio could not be played.", error);
+            }
+        }
+
+        // Format seconds as HH : MM : SS.
+        function formatTime(totalSeconds) {
+            const hours = Math.floor(totalSeconds / 3600);
+            const minutes = Math.floor((totalSeconds % 3600) / 60);
+            const seconds = totalSeconds % 60;
+
+            return [hours, minutes, seconds]
+                .map(value => String(value).padStart(2, "0"))
+                .join(" : ");
+        }
+
+        // Create an accessible timer card.
+        function createTimerCard(timer) {
+            const card = document.createElement("article");
+            card.className = timer.finished
+                ? "ended-card"
+                : "timer-card";
+
+            if (timer.finished) {
+                const message = document.createElement("strong");
+                message.textContent = "Timer Is Up !";
+
+                const stopButton = document.createElement("button");
+                stopButton.className = "stop-alarm-btn";
+                stopButton.textContent = "Stop";
+                stopButton.type = "button";
+                stopButton.setAttribute(
+                    "aria-label",
+                    "Dismiss finished timer"
+                );
+
+                stopButton.addEventListener("click", () => {
+                    removeTimer(timer.id);
+                });
+
+                card.append(message, stopButton);
+                return card;
+            }
+
+            const label = document.createElement("span");
+            label.className = "timer-label";
+            label.textContent = "Time Left :";
+
+            const time = document.createElement("time");
+            time.className = "time-display";
+            time.textContent = formatTime(timer.remaining);
+
+            const stopButton = document.createElement("button");
+            stopButton.className = "stop-timer-btn";
+            stopButton.textContent = "Stop Timer";
+            stopButton.type = "button";
+            stopButton.setAttribute(
+                "aria-label",
+                "Stop timer " + formatTime(timer.remaining)
+            );
+
+            stopButton.addEventListener("click", () => {
+                removeTimer(timer.id);
+            });
+
+            card.append(label, time, stopButton);
+            return card;
+        }
+
+        // Render the current state.
+        function renderTimers() {
+            timerList.replaceChildren();
+
+            const timerValues = Array.from(timers.values());
+            const hasTimers = timerValues.length > 0;
+            const hasFinished = timerValues.some(timer => timer.finished);
+
+            timerValues.forEach(timer => {
+                timerList.appendChild(createTimerCard(timer));
+            });
+
+            emptyMessage.classList.toggle("hidden", hasTimers);
+
+            app.classList.toggle("has-ended", hasFinished);
+
+            if (hasFinished) {
+                screenTitle.textContent = "Alarm is over";
+                screenTitle.style.color = "#087bd8";
+            } else if (hasTimers) {
+                screenTitle.textContent = "Multiple Alarms Set";
+                screenTitle.style.color = "#888";
+            } else {
+                screenTitle.textContent = "Starting Screen";
+                screenTitle.style.color = "#888";
+            }
+        }
+
+        // Stop and remove one timer.
+        function removeTimer(id) {
+            const timer = timers.get(id);
+
+            if (!timer) return;
+
+            clearInterval(timer.intervalId);
+            timers.delete(id);
+            renderTimers();
+        }
+
+        // Finish one timer and show its alert.
+        function finishTimer(timer) {
+            clearInterval(timer.intervalId);
+            timer.intervalId = null;
+            timer.remaining = 0;
+            timer.finished = true;
+
+            playAlarm();
+            renderTimers();
+        }
+
+        // Start a new, independent countdown.
+        function startTimer(totalSeconds) {
+            const timer = {
+                id: nextTimerId++,
+                remaining: totalSeconds,
+                finished: false,
+                intervalId: null
+            };
+
+            timers.set(timer.id, timer);
+
+            timer.intervalId = setInterval(() => {
+                if (!timers.has(timer.id) || timer.finished) {
+                    clearInterval(timer.intervalId);
+                    return;
+                }
+
+                timer.remaining--;
+
+                if (timer.remaining <= 0) {
+                    finishTimer(timer);
+                } else {
+                    renderTimers();
+                }
+            }, 1000);
+
+            renderTimers();
+        }
+
+        // Validate input and add a timer.
+        form.addEventListener("submit", event => {
+            event.preventDefault();
+
+            const hours = Number(hoursInput.value || 0);
+            const minutes = Number(minutesInput.value || 0);
+            const seconds = Number(secondsInput.value || 0);
+
+            const valid =
+                Number.isInteger(hours) &&
+                Number.isInteger(minutes) &&
+                Number.isInteger(seconds) &&
+                hours >= 0 && hours <= 99 &&
+                minutes >= 0 && minutes <= 59 &&
+                seconds >= 0 && seconds <= 59;
+
+            if (!valid) {
+                alert("Enter valid hours, minutes and seconds.");
+                return;
+            }
+
+            const totalSeconds =
+                hours * 3600 + minutes * 60 + seconds;
+
+            if (totalSeconds === 0) {
+                alert("Please enter a time greater than zero.");
+                return;
+            }
+
+            startTimer(totalSeconds);
+
+            form.reset();
+            hoursInput.focus();
+        });
+
+        // Initial screen.
+        renderTimers();
+    </script>
+
+</body>
+</html>
